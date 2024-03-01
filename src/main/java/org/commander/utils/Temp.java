@@ -8,25 +8,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Temp {
-    public static HashMap<String, Integer> calculateStats(List<Equipment> commander){
-        HashMap<String, Integer> totals = new HashMap<>();
-        HashMap<String, Integer> stats = new HashMap<>();
+    public static HashMap<String, Double> calculateStats(List<Equipment> commander){
+        HashMap<String, Double> totals = new HashMap<>();
+        HashMap<String, Double> stats = new HashMap<>();
         for(Equipment equipment : commander){
             for(Mod mod : equipment.getMods()){
                 String modName = mod.getModType().getName();
                 if(!totals.containsKey(modName)) {
-                    totals.put(modName, 0);
+                    totals.put(modName, 0.0);
                 }
                 totals.replace(modName, Math.min(totals.get(modName) + mod.getModValue(), mod.getModType().getMax()));
             }
         }
         for(String modName : totals.keySet()){
-            int value = totals.get(modName);
+            double value = totals.get(modName);
             if(modName.startsWith("CONDITIONAL_")){
                 modName = modName.substring("CONDITIONAL_".length());
             }
             if(!stats.containsKey(modName)){
-                stats.put(modName, 0);
+                stats.put(modName, 0.0);
             }
             stats.replace(modName, stats.get(modName) + value);
         }

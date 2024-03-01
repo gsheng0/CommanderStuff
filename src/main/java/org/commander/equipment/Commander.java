@@ -19,7 +19,7 @@ public class Commander {
         this.artifact = artifact;
         this.gems = gems;
     }
-    public HashMap<String, Integer> getStats(){
+    public HashMap<String, Double> getStats(){
         List<Equipment> equipmentList = new ArrayList<>();
         equipmentList.add(helmet);
         equipmentList.add(weapon);

@@ -26,6 +26,8 @@ public class Equipment {
             return new Artifact(mods);
         } else if(lines[0].contains("weapon")){
             return new Weapon(mods);
+        } else if(lines[0].contains("gem")){
+            return new Gem(mods);
         }
         return null;
     }

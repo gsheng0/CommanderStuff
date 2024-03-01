@@ -2,16 +2,16 @@ package org.commander.equipment.mod;
 
 public class Mod {
     private ModType modType;
-    private int modValue = 0;
-    public Mod(ModType modType, int modValue){
+    private double modValue = 0;
+    public Mod(ModType modType, double modValue){
         this.modType = modType;
         this.modValue = modValue;
     }
-    public int getModValue() { return modValue; }
+    public double getModValue() { return modValue; }
     public ModType getModType() { return modType; }
     public static Mod parseMod(String mod){
         mod = mod.toLowerCase();
-        int value = Integer.parseInt(mod.substring(0, mod.indexOf("%")));
+        double value = Double.parseDouble(mod.substring(0, mod.indexOf("%")));
         boolean isConditional = mod.contains("castle lords");
 
         if (mod.contains("ranged") && isConditional) {

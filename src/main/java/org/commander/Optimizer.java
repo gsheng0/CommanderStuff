@@ -1,6 +1,7 @@
 package org.commander;
 
 import org.commander.equipment.*;
+import org.commander.equipment.mod.ModType;
 import org.commander.utils.FileHandler;
 
 import java.util.ArrayList;
@@ -20,22 +21,47 @@ public class Optimizer {
         retrieveEquipmentSet();
         sortEquipment();
     }
-    public void optimize(int rangedMin, int meleeMin, int minCourtyard, int minFront, int minFlank){
+    public List<Commander> optimize(int rangedMin, int meleeMin, int minCourtyard, int minFront, int minFlank) {
         List<List<Gem>> gemCombinations = getGemCombinations(gems);
-        for(Helmet helmet : helmets){
-            for(Weapon weapon : weapons){
-                for(BodyArmour bodyArmour : bodyArmours){
-                    for(Artifact artifact : artifacts){
-                        for(List<Gem> gemCombination : gemCombinations){
-                             Commander commander = new Commander(
-                                     helmet, weapon, bodyArmour,
-                                     artifact, gemCombination);
-                             
+        List<Commander> commanders = new ArrayList<>();
+        for (Helmet helmet : helmets) {
+            for (Weapon weapon : weapons) {
+                for (BodyArmour bodyArmour : bodyArmours) {
+                    for (Artifact artifact : artifacts) {
+                        for (List<Gem> gemCombination : gemCombinations) {
+                            Commander commander = new Commander(
+                                    helmet, weapon, bodyArmour,
+                                    artifact, gemCombination);
+                            if(meetsRequirements(rangedMin, meleeMin, minCourtyard, minFront, minFlank,
+                                    commander)){
+                                commanders.add(commander);
+                            }
+
                         }
                     }
                 }
             }
         }
+        return commanders;
+    }
+    private boolean meetsRequirements(int rangedMin, int meleeMin, int minCourtyard, int minFront, int minFlank, Commander commander) {
+        HashMap<String, Double> statsMap = commander.getStats();
+        if (rangedMin != 0 && (!statsMap.containsKey(ModType.RANGED_STRENGTH.getName()) || statsMap.get(ModType.RANGED_STRENGTH.getName()) < rangedMin)) {
+            return false;
+        }
+        if (meleeMin != 0 && (!statsMap.containsKey(ModType.MELEE_STRENGTH.getName()) || statsMap.get(ModType.MELEE_STRENGTH.getName()) < meleeMin)) {
+            return false;
+        }
+        if (minCourtyard != 0 && (!statsMap.containsKey(ModType.COURTYARD_STRENGTH.getName()) || statsMap.get(ModType.COURTYARD_STRENGTH.getName()) < minCourtyard)) {
+            return false;
+        }
+        if (minFront != 0 && (!statsMap.containsKey(ModType.FRONT_SPACE.getName()) || statsMap.get(ModType.FRONT_SPACE.getName()) < minFront)) {
+            return false;
+        }
+        if (minFlank != 0 && (!statsMap.containsKey(ModType.FLANK_SPACE.getName()) || statsMap.get(ModType.FLANK_SPACE.getName()) < minFlank)) {
+            return false;
+        }
+        return true;
     }
     public List<List<Gem>> getGemCombinations(List<Gem> gems){
         List<List<Gem>> gemCombinations = new ArrayList<>();

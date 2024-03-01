@@ -8,7 +8,7 @@ Body Armour
 41.2% melee
 
 Artifact
-31.8 flank
+31.8% flank
 
 Helmet
 52.6% courtyard
