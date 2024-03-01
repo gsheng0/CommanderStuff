@@ -1,4 +1,4 @@
-package org.example.equipment.mod;
+package org.commander.equipment.mod;
 
 public class ModType {
     private int max = -1;

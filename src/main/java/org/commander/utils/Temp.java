@@ -1,9 +1,8 @@
-package org.example.utils;
+package org.commander.utils;
 
-import org.example.equipment.Equipment;
-import org.example.equipment.mod.Mod;
-import org.example.equipment.mod.ModType;
-import org.example.equipment.Gem;
+import org.commander.equipment.Equipment;
+import org.commander.equipment.mod.Mod;
+import org.commander.equipment.mod.ModType;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.commander.utils;
 
 public class Constants {
     public static final String SEPARATOR = "<-- -->";

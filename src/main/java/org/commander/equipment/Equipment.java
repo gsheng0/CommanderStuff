@@ -1,6 +1,6 @@
-package org.example.equipment;
+package org.commander.equipment;
 
-import org.example.equipment.mod.Mod;
+import org.commander.equipment.mod.Mod;
 
 import java.util.ArrayList;
 import java.util.List;

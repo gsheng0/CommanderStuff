@@ -1,6 +1,6 @@
-package org.example.equipment;
+package org.commander.equipment;
 
-import org.example.utils.Temp;
+import org.commander.utils.Temp;
 
 import java.util.ArrayList;
 import java.util.HashMap;

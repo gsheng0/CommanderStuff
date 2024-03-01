@@ -1,4 +1,4 @@
-package org.example.equipment.mod;
+package org.commander.equipment.mod;
 
 public class Mod {
     private ModType modType;
