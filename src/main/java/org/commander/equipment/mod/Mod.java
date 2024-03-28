@@ -1,8 +1,12 @@
 package org.commander.equipment.mod;
 
+import org.commander.equipment.mod2.ModGroup;
+
+import java.text.ParseException;
+
 public class Mod {
     private ModType modType;
-    private double modValue = 0;
+    private double modValue;
     public Mod(ModType modType, double modValue){
         this.modType = modType;
         this.modValue = modValue;
@@ -12,30 +16,15 @@ public class Mod {
     public static Mod parseMod(String mod){
         mod = mod.toLowerCase();
         double value = Double.parseDouble(mod.substring(0, mod.indexOf("%")));
-        boolean isConditional = mod.contains("castle lords");
-
-        if (mod.contains("ranged") && isConditional) {
-            return new Mod(ModType.CONDITIONAL_RANGED_STRENGTH, value);
-        } else if (mod.contains("ranged")) {
-            return new Mod(ModType.RANGED_STRENGTH, value);
-        } else if (mod.contains("melee") && isConditional) {
-            return new Mod(ModType.CONDITIONAL_MELEE_STRENGTH, value);
-        } else if (mod.contains("melee")) {
-            return new Mod(ModType.MELEE_STRENGTH, value);
-        } else if (mod.contains("courtyard") && isConditional) {
-            return new Mod(ModType.CONDITIONAL_COURTYARD_STRENGTH, value);
-        } else if (mod.contains("courtyard")) {
-            return new Mod(ModType.COURTYARD_STRENGTH, value);
-        } else if (mod.contains("flank") && isConditional) {
-            return new Mod(ModType.CONDITIONAL_FLANK_SPACE, value);
-        } else if (mod.contains("flank")) {
-            return new Mod(ModType.FLANK_SPACE, value);
-        } else if (mod.contains("front") && isConditional) {
-            return new Mod(ModType.CONDITIONAL_FRONT_SPACE, value);
-        } else if (mod.contains("front")) {
-            return new Mod(ModType.FRONT_SPACE, value);
+        for(ModType modType : ModType.MOD_TYPES) {
+            if (mod.contains(modType.getName())) {
+                return new Mod(modType, value);
+            }
         }
-        return null;
+        throw new RuntimeException("Failed to parse mod: " + mod);
+    }
+    public String toString(){
+        return "" + modValue + "% " + modType.toString();
     }
 
 }

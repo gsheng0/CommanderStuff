@@ -1,6 +1,6 @@
 package org.commander.utils;
 
-import org.commander.equipment.Equipment;
+import org.commander.equipment.mod.Equipment;
 import org.commander.equipment.mod.Mod;
 import org.commander.equipment.mod.ModType;
 
@@ -8,6 +8,32 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Temp {
+    public static HashMap<String, Double> calculateModTypeTotals(List<Equipment> commander) {
+        HashMap<String, Double> totals = new HashMap<>();
+        HashMap<String, Double> stats = new HashMap<>();
+        for (Equipment equipment : commander) {
+            for (Mod mod : equipment.getMods()) {
+                String modName = mod.getModType().getName();
+                if (!totals.containsKey(modName)) {
+                    totals.put(modName, 0.0);
+                }
+                double before = totals.get(modName);
+                totals.replace(modName, Math.min(before + mod.getModValue(), mod.getModType().getMax()));
+                double difference = totals.get(modName) - before;
+                if (difference != mod.getModValue()) {
+                    if (Math.abs(difference - mod.getModValue()) < 0.01) {
+                        continue;
+                    }
+                    String overcappedModName = "overcapped " + modName;
+                    if (!stats.containsKey(overcappedModName)) {
+                        stats.put(overcappedModName, 0.0);
+                    }
+                    stats.replace(overcappedModName, stats.get(overcappedModName) + mod.getModValue() - difference);
+                }
+            }
+        }
+        return stats;
+    }
     public static HashMap<String, Double> calculateStats(List<Equipment> commander){
         HashMap<String, Double> totals = new HashMap<>();
         HashMap<String, Double> stats = new HashMap<>();
@@ -17,13 +43,25 @@ public class Temp {
                 if(!totals.containsKey(modName)) {
                     totals.put(modName, 0.0);
                 }
-                totals.replace(modName, Math.min(totals.get(modName) + mod.getModValue(), mod.getModType().getMax()));
+                double before = totals.get(modName);
+                totals.replace(modName, Math.min(before + mod.getModValue(), mod.getModType().getMax()));
+                double difference = totals.get(modName) - before;
+                if(difference != mod.getModValue()){
+                    if(Math.abs(difference - mod.getModValue()) < 0.01){
+                        continue;
+                    }
+                    String overcappedModName = "overcapped " + modName;
+                    if(!stats.containsKey(overcappedModName)){
+                        stats.put(overcappedModName, 0.0);
+                    }
+                    stats.replace(overcappedModName, stats.get(overcappedModName) + mod.getModValue() - difference);
+                }
             }
         }
         for(String modName : totals.keySet()){
             double value = totals.get(modName);
-            if(modName.startsWith("CONDITIONAL_")){
-                modName = modName.substring("CONDITIONAL_".length());
+            if(modName.startsWith("castle lords")){
+                modName = modName.substring("castle lords ".length());
             }
             if(!stats.containsKey(modName)){
                 stats.put(modName, 0.0);

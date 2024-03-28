@@ -6,8 +6,9 @@ import org.commander.utils.FileHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Optimizer {
+public class OptimizedOptimizer {
     private String inputFileName;
     private String outputFileName;
     private List<Equipment> equipmentList;
@@ -16,7 +17,7 @@ public class Optimizer {
     private List<Weapon> weapons;
     private List<Artifact> artifacts;
     private List<Gem> gems;
-    public Optimizer(String inputFileName, String outputFileName){
+    public OptimizedOptimizer(String inputFileName, String outputFileName){
         this.outputFileName = outputFileName;
         this.inputFileName = inputFileName;
         retrieveEquipmentSet();
@@ -24,54 +25,33 @@ public class Optimizer {
     }
     public List<Commander> optimize(int rangedMin, int meleeMin, int minCourtyard, int minFront, int minFlank) {
         List<List<Gem>> gemCombinations = getGemCombinations(gems);
+        System.out.println("Got Gem combinations");
         List<Commander> commanders = new ArrayList<>();
-        for (Helmet helmet : helmets) {
-            for (Weapon weapon : weapons) {
-                for (BodyArmour bodyArmour : bodyArmours) {
-                    for (Artifact artifact : artifacts) {
-                        for (List<Gem> gemCombination : gemCombinations) {
+        AtomicInteger counter = new AtomicInteger();
+
+        helmets.parallelStream().forEach(helmet -> {
+            weapons.parallelStream().forEach(weapon -> {
+                bodyArmours.parallelStream().forEach(bodyArmour -> {
+                    artifacts.parallelStream().forEach(artifact -> {
+                        gemCombinations.parallelStream().forEach(gemCombination -> {
                             Commander commander = new Commander(
                                     helmet, weapon, bodyArmour,
                                     artifact, gemCombination);
-                            if(meetsRequirements(rangedMin, meleeMin, minCourtyard, minFront, minFlank,
-                                    commander)){
+                            if (meetsRequirements(rangedMin, meleeMin, minCourtyard, minFront, minFlank,
+                                    commander)) {
                                 commanders.add(commander);
                             }
+                        });
+                    });
+                });
+            });
+            System.out.println("Processed helmets: " + counter.incrementAndGet());
+        });
 
-                        }
-                    }
-                }
-            }
-        }
         System.out.println("Made " + commanders.size() + " commanders");
-        for(Commander commander : commanders){
-            FileHandler.write(outputFileName, commander.toString());
-        }
-        return commanders;
-    }
-    public List<Commander> optimize(int rangedMin, int meleeMin, int minCourtyard, int minWallSpace){
-        List<List<Gem>> gemCombinations = getGemCombinations(gems);
-        List<Commander> commanders = new ArrayList<>();
-        for (Helmet helmet : helmets) {
-            for (Weapon weapon : weapons) {
-                for (BodyArmour bodyArmour : bodyArmours) {
-                    for (Artifact artifact : artifacts) {
-                        for (List<Gem> gemCombination : gemCombinations) {
-                            Commander commander = new Commander(
-                                    helmet, weapon, bodyArmour,
-                                    artifact, gemCombination);
-                            if(meetsRequirements(rangedMin, meleeMin, minCourtyard, minWallSpace, commander)){
-                                commanders.add(commander);
-                            }
+        commanders.parallelStream().forEach(commander ->
+                FileHandler.write(outputFileName, commander.toString()));
 
-                        }
-                    }
-                }
-            }
-        }
-        for(Commander commander : commanders){
-            FileHandler.write(outputFileName, commander.toString());
-        }
         return commanders;
     }
     private boolean meetsRequirements(int rangedMin, int meleeMin, int minCourtyard, int minFront, int minFlank, Commander commander) {
