@@ -1,6 +1,6 @@
 package org.commander.equipment.mod2;
 
-public class Equipment {
+public class Equipment implements Comparable<Equipment>{
     private String name;
     private ModGroup modGroup;
     public Equipment(String name){
@@ -9,6 +9,7 @@ public class Equipment {
     }
     public void add(ModGroup modGroup){
         this.modGroup.add(modGroup);
+
     }
     public double getModScore(){
         return modGroup.getModScore();
@@ -20,7 +21,7 @@ public class Equipment {
     public ModGroup getModGroup(){
         return modGroup;
     }
-    public Equipment parseEquipment(String string){
+    public static Equipment parseEquipment(String string){
         Equipment output;
         string = string.toLowerCase();
         String[] chunks = string.split("\n");
@@ -41,7 +42,13 @@ public class Equipment {
             Mod mod = Mod.parseMod(chunks[i]);
             output.add(mod.toModGroup());
         }
+        output.modGroup.setParseString(string);
         return output;
+    }
+
+    @Override
+    public int compareTo(Equipment o) {
+        return Double.compare(o.getModScore(), this.getModScore());
     }
 
 }

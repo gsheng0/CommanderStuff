@@ -24,7 +24,7 @@ public class ModGroup {
             map.put(mod.getModType(), mod);
         } else{
             Mod mapMod = map.get(mod.getModType());
-            waste += mapMod.add(mod.getGlobalValue(), mod.getConditionalValue());
+            mapMod.add(mod.getGlobalValue(), mod.getConditionalValue());
         }
         calculateModScore();
     }
@@ -46,6 +46,22 @@ public class ModGroup {
     }
     public double getModScore(){
         return modScore;
+    }
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        for(Mod mod : set){
+            builder.append(mod.toString());
+            builder.append("\n");
+        }
+        if(parseString.length() > 0){
+            builder.append(parseString);
+        }
+        builder.append("\n");
+        return builder.toString();
+    }
+    private String parseString = "";
+    public void setParseString(String parseString){
+        this.parseString = parseString;
     }
 
 }

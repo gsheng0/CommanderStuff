@@ -11,6 +11,9 @@ public class ModType {
         this.globalMax = globalMax;
         this.conditionalMax = conditionalMax;
     }
+    public String toString(){
+        return modName;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -42,8 +45,9 @@ public class ModType {
     public static ModType FLANK = new ModType("flank", 50.0, 40.0);
     public static ModType FRONT = new ModType("front", 50.0, 40.0);
     public static ModType COMBAT_STRENGTH = new ModType("combat", 20.0, 0.0);
+    public static ModType WALL_SPACE = new ModType("wall space", 50.0, 40.0);
     public static ModType[] MOD_LIST = new ModType[]{
-            RANGED, MELEE, COURTYARD, FLANK, FLANK, FRONT, COMBAT_STRENGTH
+            RANGED, MELEE, COURTYARD, FLANK, FLANK, FRONT, COMBAT_STRENGTH, WALL_SPACE
     };
 
 }
